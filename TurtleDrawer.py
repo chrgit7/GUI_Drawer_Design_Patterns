@@ -1,14 +1,17 @@
 from TIGr import AbstractDrawer
 import turtle
 from ErrorChecking import ErrorChecking as Ec
+from Subject import Subject
 
 
-class TurtleDrawer(AbstractDrawer):
+class TurtleDrawer(AbstractDrawer, Subject):
     def __init__(self):
+        Subject.__init__(self)
         self.penlist = ["", "white", "black", "red", "yellow", "blue"]
         self.turtle = turtle.Turtle()
         self.pen_up()
-        self.check = Ec().check  # error checking class
+        self.check = Ec().check
+        self.triangle_size = 1
 
     def select_pen(self, pen_num):
         if int(pen_num) > 5 or int(pen_num) < 1:
@@ -75,7 +78,15 @@ class TurtleDrawer(AbstractDrawer):
         self.turtle.seth(0)
         for i in range(3):
             self.turtle.left(120)
-            self.turtle.forward(1 * size)
+            self.turtle.forward(1 * size * self.triangle_size)
 
     def end(self):
         self.turtle.getscreen()._root.mainloop()
+
+    def get_state(self):
+        return self.triangle_size
+
+    def set_state(self, new_state):
+        self.triangle_size = new_state
+        print("\nTurtleDrawer has CHANGED")
+        self.notify()
