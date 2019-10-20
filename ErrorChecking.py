@@ -1,11 +1,18 @@
-class ErrorChecking:
-    def __init__(self):
-        self.message = []  # argument, function name, class name
+from abc import ABC, abstractmethod
 
-    def check(self, variable, vartype, message):
+
+class AbstractErrorChecking(ABC):
+    def __init__(self):
+        self.message = []
+
+    @abstractmethod
+    def error_message(self, req_type):
+        pass
+
+    def check(self, variable, var_type, message):
         message.replace(" ", "")
         self.message = message.split(",")
-        errormessage = {
+        error_message = {
             "int": lambda: self.not_a_int(variable),
             "string": lambda: self.not_a_string(variable),
             "list": lambda: self.not_a_list(variable),
@@ -13,7 +20,7 @@ class ErrorChecking:
             "float": lambda: self.not_a_float(variable),
             "floatOrInt": lambda: self.not_a_float_or_int(variable)
         }
-        errormessage[vartype]()
+        error_message[var_type]()
 
     def not_a_int(self, variable):
         if not isinstance(variable, int):
@@ -39,7 +46,12 @@ class ErrorChecking:
         if not isinstance(variable, float) and not isinstance(variable, int):
             print(self.error_message("float or int"))
 
-    def error_message(self, reqtype):
+
+class ErrorChecking(AbstractErrorChecking):
+    def __init__(self):
+        super().__init__()
+
+    def error_message(self, req_type):
         return "The %s argument of the %s function inside the %s" \
                " class is not a %s!" %\
-               (self.message[0], self.message[1], self.message[2], reqtype)
+               (self.message[0], self.message[1], self.message[2], req_type)
