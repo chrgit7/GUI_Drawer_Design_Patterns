@@ -2,11 +2,13 @@ import math
 from graphics import *
 from TIGr import AbstractDrawer
 from ErrorChecking import ErrorChecking as Ec
+from Subject import Subject
 
 
 # Note: You have to install the graphics.py package to use this class
-class GraphicsDrawer(AbstractDrawer):
+class GraphicsDrawer(AbstractDrawer, Subject):
     def __init__(self):
+        Subject.__init__(self)
         self.graphics = GraphWin("graphics.py", 500, 500)
         self.x = 250
         self.y = 250
@@ -14,6 +16,7 @@ class GraphicsDrawer(AbstractDrawer):
         self.color = "blue"
         self.penlist = ["", "white", "black", "red", "yellow", "blue"]
         self.check = Ec().check
+        self.triangle_size = 1
 
     def select_pen(self, pen_num):
         if int(pen_num) > 5 or int(pen_num) < 1:
@@ -68,9 +71,9 @@ class GraphicsDrawer(AbstractDrawer):
             self.draw_line(arraydir[i - 1], size)
 
     def draw_triangle(self, size):
-        p1 = Point(55, 85)
-        p2 = Point(155, 85)
-        p3 = Point(105, 180)
+        p1 = Point((55 * self.triangle_size), (85 * self.triangle_size))
+        p2 = Point((155 * self.triangle_size), (85 * self.triangle_size))
+        p3 = Point((105 * self.triangle_size), (180 * self.triangle_size))
         vertices = [p1, p2, p3]
         triangle = Polygon(vertices)
         triangle.draw(self.graphics)
@@ -88,3 +91,11 @@ class GraphicsDrawer(AbstractDrawer):
         new_x = currentpos[0] + delta_x
         new_y = currentpos[1] + delta_y
         return new_x, new_y
+
+    def get_state(self):
+        return self.triangle_size
+
+    def set_state(self, new_state):
+        self.triangle_size = new_state
+        print("\nGraphicsDrawer has CHANGED")
+        self.notify()
